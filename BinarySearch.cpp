@@ -1,9 +1,13 @@
 #include <iostream>
+#include <array>
+
 
 using namespace std;
-
- int search(int start, int end, int arr[], int target)
+template <typename T, size_t N>
+ int Binarysearch(array<T, N> &arr,int target)
  {
+    int start = 0;
+    int end = N-1;
      do{
          int mid = start+(end-start)/2;
          
@@ -23,9 +27,9 @@ using namespace std;
 
 int main()
 {
-    int a[10] = {1, 2, 3, 4, 5 ,6, 7 ,8 ,9, 10};
+    array<int, 10> a = {1, 2, 3, 4, 5 ,6, 7 ,8 ,9, 10};
     
-    int x = search(0, 9, a, 1);
+    int x = Binarysearch(a, 1);
     cout << a[x] << endl;
 
     return 0;
