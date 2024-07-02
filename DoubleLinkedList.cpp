@@ -1,6 +1,7 @@
 // creating a double linked list
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -35,15 +36,41 @@ class LinkedList {
             head = node_ptr;
         }
         tail = node_ptr;
-        this->length += 1;
+        length += 1;
     }
-    void print(){
+
+    void prepend(T item){
+        shared_ptr<LinkedListNode<T>> node_ptr = make_shared<LinkedListNode<T>>(item);
+        if(head) {
+            node_ptr->n = head;
+            head->p = node_ptr;
+        } else {
+            tail = node_ptr;
+        }
+        head = node_ptr;
+        length += 1;
+    }
+
+    void insertAt(T item, int index){
+        if (index<0 || length-1<index){
+            throw std::out_of_range("Index is out of range. Range: 0-" + std::to_string(length-1));
+        }
+        if(head == nullptr){
+            throw std::logic_error("The list is empty.");
+        }
         shared_ptr<LinkedListNode<T>> current = head;
-        for(int i = 0; i<this->length; i++){
-            cout << current->v << endl;
+        shared_ptr<LinkedListNode<T>> node_ptr = make_shared<LinkedListNode<T>>(item);
+
+        for(int i = 0; i<index; ++i){
             current = current->n;
         }
+        node_ptr->p = current->p;
+        node_ptr->n = current;
+        current->p->n = node_ptr;
+        current->p = node_ptr;
+        length += 1;
     }
+    
     int size(){
         return this->length;
     }
@@ -52,6 +79,22 @@ class LinkedList {
     
         
 };
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list){
+    os << "[";
+
+    shared_ptr<LinkedListNode<T>> current = list.head;
+    while(current != nullptr){
+        os << current->v;
+        if(current->n != nullptr){
+            os << ", ";
+        }
+        current = current->n;
+    }    
+    os << "]";
+
+    return os;
+}
     
 
 
@@ -61,11 +104,16 @@ int main(){
     LinkedList<int> list = {3, 2, 1, 5, 6, 7, 2};
     
     std::cout << list.size() << endl;
-    list.print();
-    std::cout << list.size() << endl;
+    cout << list << endl;
     list.append(3);
     list.append(15);
-    list.print();    
+    cout << list << endl;
+    list.prepend(345);
+    cout << list << endl;
+    list.insertAt(22, 3);
+    cout << list << endl;
+    list.insertAt(10, 15);
+    cout << list << endl;
     std::cout << list.size() << endl;
     return 0;
 }
