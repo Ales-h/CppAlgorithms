@@ -1,6 +1,5 @@
 #include <iostream>
 #include <array>
-#include <vector>
 
 template <typename T, size_t N>
 int partition(std::array<T, N>& arr, int low, int high) {
